@@ -11,7 +11,7 @@ import spock.lang.Unroll
 class AmpSpec extends BaseSpec {
 
     private static final int MAX_TIMEOUT = 5000
-    private static final int DEFAULT_TIMEOUT = PBSUtils.getRandomNumber(0, MAX_TIMEOUT)
+    private static final int DEFAULT_TIMEOUT = PBSUtils.getRandomNumber(1000, MAX_TIMEOUT)
 
     @Shared
     PrebidServerService prebidServerService = pbsServiceFactory.getService(["auction.max-timeout-ms"    : MAX_TIMEOUT as String,
@@ -30,7 +30,7 @@ class AmpSpec extends BaseSpec {
         }
 
         and: "Save storedRequest into DB"
-        def storedRequest = StoredRequest.getDbStoredRequest(ampRequest, ampStoredRequest)
+        def storedRequest = StoredRequest.getAmpDbStoredRequest(ampRequest, ampStoredRequest)
         storedRequestDao.save(storedRequest)
 
         when: "PBS processes amp request"
@@ -55,7 +55,7 @@ class AmpSpec extends BaseSpec {
         }
 
         and: "Save storedRequest into DB"
-        def storedRequest = StoredRequest.getDbStoredRequest(ampRequest, ampStoredRequest)
+        def storedRequest = StoredRequest.getAmpDbStoredRequest(ampRequest, ampStoredRequest)
         storedRequestDao.save(storedRequest)
 
         when: "PBS processes amp request"
@@ -82,7 +82,7 @@ class AmpSpec extends BaseSpec {
         }
 
         and: "Save storedRequest into DB"
-        def storedRequest = StoredRequest.getDbStoredRequest(ampRequest, ampStoredRequest)
+        def storedRequest = StoredRequest.getAmpDbStoredRequest(ampRequest, ampStoredRequest)
         storedRequestDao.save(storedRequest)
 
         when: "PBS processes amp request"
@@ -111,7 +111,7 @@ class AmpSpec extends BaseSpec {
         }
 
         and: "Save storedRequest into DB"
-        def storedRequest = StoredRequest.getDbStoredRequest(ampRequest, ampStoredRequest)
+        def storedRequest = StoredRequest.getAmpDbStoredRequest(ampRequest, ampStoredRequest)
         storedRequestDao.save(storedRequest)
 
         when: "PBS processes amp request"
