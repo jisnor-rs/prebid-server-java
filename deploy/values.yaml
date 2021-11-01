@@ -1,0 +1,64 @@
+# These values will be injected automatically by Jarvis.
+# It is here just for the sake of documenting - the values should not be in resulting yaml file in your repo.
+# jarvis:
+#   buildNumber: ${BUILD_NUMBER}
+#   repoOrg: ${env.REPO_ORG}
+#   repoName: ${env.REPO_NAME}
+#   repoGitCommit: ${env.REPO_GIT_COMMIT}
+#   promotionEnvName: ${env.PROMOTION_ENV_NAME}
+#   appName: ${env.APP_NAME}
+#   appVersion: ${env.APP_VERSION}
+#   clusterName: ${k8sCluster}
+#   newRelicAppName: ${env.APP_NAME}.${env.PROMOTION_ENV_NAME}.aws.vmn.io
+
+deployments:
+  prebid-server:
+    containers:
+      api:
+        resources:
+          requests:
+            cpu: '10m'
+            memory: 64Mi
+          limits:
+            cpu: '256m'
+            memory: 512Mi
+        ports:
+          http:
+            containerPort: 8000
+            protocol: TCP
+        livenessProbe:
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: http
+        env:
+          PBS_GDPR_DEFAULT_VALUE:
+            value: "0"
+    hpa:
+      replicaCountMin: 1
+      replicaCountMax: 3
+      metrics:
+        cpu:
+          targetAverageUtilization: 90
+    services:
+      api-svc:
+        type: ClusterIP
+        port: 80
+        targetPort: 8000
+        protocol: TCP
+        ingress:
+          internal:
+            path: /
+            hosts:
+              "default": {}
+          ssl:
+            external: true
+            path: /
+            ssl: true
+            sslRedirect: true
+            hosts:
+              "prebid-server.use1.${env.PROMOTION_ENV_NAME}.aws.viacbs.cloud": {}
+              "prebid-server.viacomcbs.digital": {}
+              "default": {}

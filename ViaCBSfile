@@ -1,0 +1,22 @@
+cgePipeline('docker') {
+  role 'vc-fms-prebid-server'
+  overrideAppName 'prebid-server'
+
+  deployWith('helm') {
+    role 'vc-fms-prebid-server'
+    timeout 300L
+
+    values 'deploy/values.yaml'
+
+    chart {
+      // repository 'cge-prod'  // TODO: add this again when artifactory fixed
+      name 'vmn-generic'
+      version '0.2.95'
+    }
+
+    discoverK8sClusterWith('s3') {
+      namespace 'fms'
+      release 'prebid-server-${env.PROMOTION_ENV_NAME}'
+    }
+  }
+}
